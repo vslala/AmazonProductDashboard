@@ -1,0 +1,25 @@
+<div class="row">
+	<div class="col-sm-12">
+		<h2>Product Search</h2>
+	</div>
+</div>
+<div class="row">
+	<div class="col-sm-12">
+		<div class="row">
+			<div class="col-sm-12">
+				<label>Search for the product</label>
+			</div>
+		</div>
+		<div class="row">
+			<form class="form" role="form" action="<?= Base::instance()->get(BASEURL); ?>/search-product/" method="POST">
+				<div class="col-sm-8">
+					<input class="form-control" type="text" name="searchQuery">
+				</div>
+				<div class="col-sm-4">
+					<button class="btn btn-primary" type="submit">Search</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+	
