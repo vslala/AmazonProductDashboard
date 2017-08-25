@@ -12,7 +12,7 @@ class UserDAO extends BaseModel {
 	}
 
 	public function persistUser($user) {
-		$this->db->exec(
+		$flag = $this->db->exec(
 			"INSERT INTO bma_affiliates 
 				(first_name, last_name, email, username, password, associate_tag, mobile, active, created_at, updated_at)
 					VALUES (:firstName, :lastName, :email, :username, :password, :associateTag, :mobile, :active, :createdAt, :updatedAt)",
@@ -29,8 +29,7 @@ class UserDAO extends BaseModel {
 				':updatedAt'	=> 	$user->getUpdatedAt()
 				)
 			);
-		$lastInsertId = $this->db->lastInsertId();
-		echo $lastInsertId;
+		return $flag;
 	}
 
 	public function getUserByUsername($user) {

@@ -10,9 +10,12 @@
 </head>
 <body>
 
-<div>
-<?= View::instance()->render('views/dashboard/template-parts/navbar.htm'); ?>
-</div>
+<?php
+	$hasNavbar = Base::instance()->get('navbar');
+	if (null != $hasNavbar) {
+		echo View::instance()->render($hasNavbar);
+	}
+?>
 <div class="container">
 	<div class="content">
 		<?= View::instance()->render(Base::instance()->get('content')); ?>

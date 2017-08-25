@@ -7,16 +7,15 @@ use Model\BO\UserBO;
 class LoginController extends BaseController {
 
 	private $userBO;
+	private $path;
 
 	public function __construct() {
 		parent::__construct();
 		$this->userBO = new UserBO();
-	}
 
-	public function beforeRoute() {
-		if (null == $this->f3->get('SESSION.user')) {
-			
-		}
+		$this->path = $this->f3->get('PATH');
+		if ($this->path == '/login' && null != $this->f3->get('SESSION.user'))
+			$this->f3->reroute('@user_dashboard');
 	}
 
 	public function renderLoginPage() {
@@ -32,6 +31,7 @@ class LoginController extends BaseController {
 
 	public function logout() {
 		$this->f3->set('SESSION.user', null);
+		$this->f3->set('navbar', null);
 		$this->f3->reroute('@user_login');
 	}
 }

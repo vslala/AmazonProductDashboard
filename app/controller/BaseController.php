@@ -13,4 +13,8 @@ class BaseController {
 		$this->f3 = \Base::instance();
 		$this->view = \View::instance();
 	}
+
+	public function beforeRoute() {
+
+	}
 }

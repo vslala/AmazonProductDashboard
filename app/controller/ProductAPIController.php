@@ -16,13 +16,17 @@ class ProductAPIController extends BaseController {
 	private $userBO;
 	private $operations;
 
-	public function __construct() {
-		parent::__construct();
+	public function beforeRoute() {
 		if (null == $this->f3->get('SESSION.user'))
 			$this->f3->reroute('@user_login');
+	}
 
+	public function __construct() {
+		parent::__construct();
 		$this->userBO = new UserBO();
 		$this->operations 	= new OperationHandler();
+
+		$this->f3->set('navbar', 'views/dashboard/template-parts/navbar.htm');
 	}
 
 	public function renderSearchPage() {

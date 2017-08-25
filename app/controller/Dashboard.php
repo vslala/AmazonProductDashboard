@@ -11,6 +11,8 @@ class Dashboard extends BaseController {
 
 	public function __construct() {
 		parent::__construct();
+
+		$this->f3->set('navbar', 'views/dashboard/template-parts/navbar.htm');
 	}
 
 	public function renderDashboardHome() {
