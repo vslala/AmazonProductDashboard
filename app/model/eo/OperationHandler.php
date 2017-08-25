@@ -8,15 +8,18 @@ use ApaiIO\Operations\Search;
 use ApaiIO\Operations\Lookup;
 use ApaiIO\ApaiIO;
 use Util\ProductAPIExtension;
+use Model\DAO\UserDAO;
 
 class OperationHandler {
 
 	private $f3;
+	private $userDAO;
 
 	protected $apaiIO;
 
 	public function __construct() {
 		$this->f3 = Base::instance();
+		$this->userDAO = new UserDAO();
 
 		$conf = new GenericConfiguration();
 		$client = new \GuzzleHttp\Client();
@@ -26,20 +29,19 @@ class OperationHandler {
 		    ->setCountry($this->f3->get(COUNTRY_DEFAULT))
 		    ->setAccessKey($this->f3->get(AWS_API_KEY))
 		    ->setSecretKey($this->f3->get(AWS_API_SECRET_KEY))
-		    ->setAssociateTag($this->f3->get(AWS_ASSOCIATE_TAG))
+		    ->setAssociateTag(trim($this->f3->get('SESSION.user')->getAssociateTag()))
 		    ->setRequest($request);
 		$this->apaiIO = new ApaiIO($conf);
 	}
 
-	public function searchByTitle($title) {
+	public function searchByTitle($title, $resGrp = array('Images', 'Medium'), $page = 1) {
 		$search = new Search();
 		$search->setCategory('All');
 		$search->setKeywords($title);
+		$search->setResponseGroup($resGrp);
+		$search->setPage($page);
 		$formattedResponse = $this->apaiIO->runOperation($search);
-		return simplexml_load_string($formattedResponse);
+		return $formattedResponse;
 	}
-
-	
-
 	
 }

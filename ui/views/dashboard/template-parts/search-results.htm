@@ -1,0 +1,122 @@
+<?php
+	$f3 = Base::instance();
+?>
+<style>
+.media {
+	background: white;
+	padding: 10px;
+	border: 1px solid yellow;
+}
+.media-heading {
+	
+}
+.media-body {
+	width: 80% !important;
+}
+.media-right {
+	padding: 10px;
+	border-left: 1px solid lightgrey;
+}
+hr {
+	width: 2px;
+}
+</style>
+<div class="row">
+	<div class="col-sm-12">
+		<h2>
+			Search Results 
+			<a class="btn btn-primary" href="<?= $f3->get(BASEURL) ?>/dashboard/refresh?<?= $f3->get('metaInfo')['searchQuery']; ?>">Refresh</a>
+		</h2>
+		<div class="row">
+			<div class="col-md-4 col-sm-12">
+				<table class="table">
+					<tr>
+						<td>Total Results </td>
+						<td><?= $metaInfo['totalResults'] ?></td>
+						<td></td>
+					</tr>
+					<tr>
+						<td>Total Pages </td>
+						<td><?= $metaInfo['totalPages'] ?></td>
+						<td></td>
+					</tr>
+					<tr>
+					</tr>
+				</table>
+			</div>
+			<div class="col-md-4"></div>
+			<div class="col-md-4">
+				<?php 
+					$currPage = (int)($metaInfo['page']);
+					$prevPage = $currPage - 1;
+					$nextPage = $currPage + 1; 
+					$searchStr = $metaInfo['userSearchTerm'];
+					$baseurl   = $f3->get('BASEURL');
+					$nextPageLink	   = $baseurl . '/dashboard/search-product?userSearchTerm=' . $searchStr . '&page=' . $nextPage;
+					$prevPageLink = $baseurl . '/dashboard/search-product?userSearchTerm=' . $searchStr . '&page=' . $prevPage;
+				?>
+				<?php
+					if ($prevPage <= 0) 
+						echo '<a href="'. $nextPageLink . '">next page:'. $nextPage .'</a>';
+					else if ($nextPage >= $metaInfo['totalPages']) 
+						echo '<a href="'. $prevPageLink .'">prev page:'. $prevPage . '</a>';
+					else {
+						echo '<a href="'. $prevPageLink .'">prev page:'. $prevPage . '|</a>';
+						echo '<a href="'. $nextPageLink .'">next page:'. $nextPage . '</a>';
+					}
+				?>
+				
+				
+			</div>
+		</div>
+	</div>
+	<div class="col-sm-12">
+		<?php 
+			foreach ($items->Item as $product):
+		?>
+		<div class="media">
+		  <div class="media-body">
+		    <h3 class="media-heading"><?= $product->ItemAttributes->Title ?></h3>
+		  	<p>
+		  		<label>Share your affiliate link</label>
+		  		<code><pre><?= $product->DetailPageURL; ?></pre></code>
+		  	</p>
+		  	<p>
+		  		<ul>
+		  			<?php
+		  				$price = $product->ItemAttributes->ListPrice->FormattedPrice;
+		  				if (isset($price)) {
+		  				?>
+		  			<li>
+		  				<label>Price: <?= $price ?></label>
+		  			</li>
+		  			<?php
+		  				}
+		  			?>
+		  		</ul>
+		  	</p>
+		  	<h4>Description</h4>
+		    <p><?= html_entity_decode($product->EditorialReviews->EditorialReview->Content) ?></p>
+		  </div>
+		  <div class="media-right">
+		    <img src="<?= $product->MediumImage->URL ?>" class="media-object">
+		  </div>
+		</div>
+		<hr>
+		<?php
+			endforeach;
+		?>
+	</div>
+	<div class="col-sm-12">
+		<?php
+			if ($prevPage <= 0) 
+				echo '<a href="'. $nextPageLink . '">next page:'. $nextPage .'</a>';
+			else if ($nextPage >= $metaInfo['totalPages']) 
+				echo '<a href="'. $prevPageLink .'">prev page:'. $prevPage . '</a>';
+			else {
+				echo '<a href="'. $prevPageLink .'">prev page:'. $prevPage . '|</a>';
+				echo '<a href="'. $nextPageLink .'">next page:'. $nextPage . '</a>';
+			}
+		?>
+	</div>
+</div>

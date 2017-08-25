@@ -8,19 +8,21 @@ use ApaiIO\Operations\Lookup;
 use ApaiIO\ApaiIO;
 use Util\ProductAPIExtension;
 use Model\EO\OperationHandler;
+use Model\BO\UserBO;
 
 
 class ProductAPIController extends BaseController {
 
+	private $userBO;
 	private $operations;
 
 	public function __construct() {
 		parent::__construct();
-
-		if (empty($this->f3->get('SESSION.user')))
+		if (null == $this->f3->get('SESSION.user'))
 			$this->f3->reroute('@user_login');
 
-		$this->operations = new OperationHandler();
+		$this->userBO = new UserBO();
+		$this->operations 	= new OperationHandler();
 	}
 
 	public function renderSearchPage() {
@@ -29,16 +31,34 @@ class ProductAPIController extends BaseController {
 	}
 
 	public function searchProduct() {
-		$data = $this->operations->searchByTitle($this->f3->get('POST.searchQuery'));
-		echo '<ul>';
-		foreach ($data->Items->Item as $item) {
-			echo '<li><a href="'. $item->DetailPageURL .'">' . $item->ItemAttributes->Title . '</a></li>' ;
-		}
-		
-		echo '</ul>';
-		// $this->f3->set('data', $data->Items);
-		// $this->f3->set('content', 'views/dashboard/search-view.htm');
-		// $this->view->render('layout.htm');
+		$userSearch = array(
+			'userId'		=>	$this->f3->get('SESSION.user')->getUserId(),
+			'responseGroup'	=>	array('Images', 'Medium'),
+			'searchQuery'	=>	$this->f3->get('QUERY'),
+			'userSearchTerm'=>	$this->f3->get('GET.userSearchTerm'),
+			'page'			=> 	null == $this->f3->get('GET.page') ? 1: $this->f3->get('GET.page')
+			); 	
+
+		$data = $this->userBO->searchByTitle($userSearch);
+
+		$metaInfo = array(
+			"totalPages"	=> $data->Items->TotalPages,
+			"searchQuery"	=> $userSearch['searchQuery'],
+			"userSearchTerm"=> $userSearch['userSearchTerm'],
+			"totalResults"	=> $data->Items->TotalResults,
+			"page"			=> $userSearch['page']
+			);
+		$this->f3->set('metaInfo', $metaInfo);
+		$this->f3->set('items', $data->Items);
+		$this->f3->set('content', 'views/dashboard/index.htm');
+		echo $this->view->render('layout.htm');
+	}
+
+	public function refresh() {
+		$searchQuery 	= $this->f3->get('QUERY');
+		$userId 		= $this->f3->get('SESSION.user')->getUserId();
+		$this->userBO->deleteUserSearchData($userId);
+		$this->f3->reroute('@search_product?' . $searchQuery);
 	}
 
 }

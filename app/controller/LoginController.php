@@ -10,8 +10,13 @@ class LoginController extends BaseController {
 
 	public function __construct() {
 		parent::__construct();
-
 		$this->userBO = new UserBO();
+	}
+
+	public function beforeRoute() {
+		if (null == $this->f3->get('SESSION.user')) {
+			
+		}
 	}
 
 	public function renderLoginPage() {
@@ -23,5 +28,10 @@ class LoginController extends BaseController {
 		$authUser = $this->userBO->authUser($this->f3->get('POST'));
 		$this->f3->set('SESSION.user', $authUser);
 		$this->f3->reroute('@user_dashboard');
+	}
+
+	public function logout() {
+		$this->f3->set('SESSION.user', null);
+		$this->f3->reroute('@user_login');
 	}
 }

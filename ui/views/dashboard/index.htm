@@ -1,7 +1,22 @@
 <div class="row">
 	<div class="col-md-4"></div>
 	<div class="col-md-4 col-sm-12">
-		<?= View::instance()->render('views/dashboard/search-view.htm'); ?>
+		<?= View::instance()->render('views/dashboard/template-parts/search-view.htm'); ?>
 	</div>
 	<div class="col-md-4"></div>
 </div>
+
+<hr/>
+
+<?php
+	$items = Base::instance()->get('items');
+	if (! empty($items)) :
+?>
+<div class="row">
+	<div class="col-sm-12">
+		<?= View::instance()->render('views/dashboard/template-parts/search-results.htm'); ?>
+	</div>
+</div>
+<?php
+	endif;
+?>

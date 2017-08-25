@@ -3,6 +3,7 @@
 namespace Model\VO;
 
 class UserVO {
+	private $userId;
 	private $firstName;
 	private $lastName;
 	private $email;
@@ -13,6 +14,9 @@ class UserVO {
 	private $active;
 	private $createdAt;
 	private $updatedAt;
+
+	public function setUserId($userId) { $this->userId = $userId; }
+	public function getUserId() { return $this->userId; }
 
 	public function setFirstName($firstName) { $this->firstName = $firstName;}
 	public function getFirstName() { return $this->firstName; }

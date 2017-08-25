@@ -19,7 +19,8 @@ class BaseModel {
 		$this->db = new \DB\SQL(
 		    self::DB_CONN_STRING,
 		    self::USER,
-		    self::PASSWORD
+		    self::PASSWORD,
+		    array( \PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION )
 		);
 	}
 }

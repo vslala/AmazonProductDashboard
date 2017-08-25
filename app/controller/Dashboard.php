@@ -5,7 +5,7 @@ namespace Controller;
 class Dashboard extends BaseController {
 
 	public function beforeRoute() {
-		if (empty($this->f3->get('SESSION.user')))
+		if (null == $this->f3->get('SESSION.user'))
 			$this->f3->reroute('@user_login');
 	}
 
